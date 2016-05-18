@@ -53,6 +53,10 @@ class IseedCommand extends Command
             $chunkSize = null;
         }
 
+        if ($this->checkSeedAllDatabase()){
+            $tables = app('iseed')->getAllTableName($this->option('database'));
+        }
+
         $tableIncrement = 0;
         foreach ($tables as $table) {
             $table       = trim($table);
@@ -114,6 +118,22 @@ class IseedCommand extends Command
     }
 
     /**
+     * Check if process all tables
+     *
+     * @return bool
+     */
+    protected function checkSeedAllDatabase (){
+
+        $checkOptionAll = ($this->option('all') === 'true');
+        $checkTableAll = ($this->argument('tables') === "all");
+
+        if ( ($checkOptionAll) and ($checkTableAll) ){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Get the console command options.
      *
      * @return array
@@ -127,6 +147,7 @@ class IseedCommand extends Command
             array('max', null, InputOption::VALUE_OPTIONAL, 'max number of rows', null),
             array('prerun', null, InputOption::VALUE_OPTIONAL, 'prerun event name', null),
             array('postrun', null, InputOption::VALUE_OPTIONAL, 'postrun event name', null),
+            array('all', null, InputOption::VALUE_OPTIONAL, 'seed all tables', null),
         );
     }
 

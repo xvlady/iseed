@@ -139,6 +139,28 @@ class Iseed
     }
 
     /**
+     * Get all tables names in array
+     *
+     * @return array
+     */
+    public function getAllTableName ($databaseName){
+
+        $tables = \DB::connection($databaseName)->select('SHOW TABLES');
+        
+        $databaseName = \Config::get('database.connections.'.$databaseName.'.database');
+
+        $tablesFormatted = [];
+
+        foreach ($tables as $table){
+            $field = 'Tables_in_'.$databaseName;
+            $tablesFormatted [] = $table->$field;
+        }
+
+        return $tablesFormatted;
+
+    }
+
+    /**
      * Checks if a database table exists
      * @param string $table
      * @return boolean
