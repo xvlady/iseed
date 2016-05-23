@@ -74,7 +74,7 @@ class IseedCommand extends Command
             list($fileName, $className) = $this->generateFileName($table);
 
             // if file does not exist or force option is turned on generate seeder
-            if (!\File::exists($fileName) || $this->option('force')) {
+            if (!file_exists($fileName) || $this->option('force')) {
                 $this->printResult(
                     app('iseed')->generateSeed(
                         $table,

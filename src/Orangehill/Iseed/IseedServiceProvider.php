@@ -35,10 +35,14 @@ class IseedServiceProvider extends ServiceProvider
         $this->app['iseed'] = $this->app->share(function($app) {
             return new Iseed;
         });
-        $this->app->booting(function() {
-            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('Iseed', 'Orangehill\Iseed\Facades\Iseed');
-        });
+        if (class_exists('Illuminate\Foundation\AliasLoader')) {
+            $this->app->booting(function() {
+                $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+                $loader->alias('Iseed', 'Orangehill\Iseed\Facades\Iseed');
+            });
+        } else {
+            class_alias('Orangehill\Iseed\Facades\Iseed', 'Iseed');
+        }
 
         $this->app['command.iseed'] = $this->app->share(function($app) {
             return new IseedCommand;
@@ -63,7 +67,7 @@ class IseedServiceProvider extends ServiceProvider
      */
     protected function registerResources()
     {
-        $userConfigFile    = app()->configPath().'/iseed.php';
+        $userConfigFile    = config_path('iseed.php');
         $packageConfigFile = __DIR__.'/../../config/config.php';
         $config            = $this->app['files']->getRequire($packageConfigFile);
 
