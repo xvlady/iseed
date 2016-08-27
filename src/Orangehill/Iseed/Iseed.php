@@ -125,6 +125,11 @@ class Iseed
      */
     public function repackSeedData($data)
     {
+        // Check if $data is an array
+        if (!is_array($data)) {
+            $data = $data->toArray();
+        }
+
         $dataArray = array();
         if (is_array($data)) {
             foreach ($data as $row) {
