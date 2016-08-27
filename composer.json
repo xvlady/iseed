@@ -9,6 +9,7 @@
             "email": "tihomir.opacic@orangehilldev.com"
         }
     ],
+    "version": "2.3.0",
     "require": {
         "php": ">=5.4.0"
     },
