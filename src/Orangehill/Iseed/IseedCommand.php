@@ -176,7 +176,7 @@ class IseedCommand extends Command
      */
     protected function generateFileName($table)
     {
-        if (!\Schema::connection($this->option('database'))->hasTable($table)) {
+        if (!\Schema::connection($this->option('database') ? $this->option('database') : 'database.default')->hasTable($table)) {
             throw new TableNotFoundException("Table $table was not found.");
         }
 
