@@ -104,6 +104,11 @@ class Iseed
         return base_path().config('iseed::config.path');
     }
 
+    public function hasColumn($table, $field)
+    {
+        return \Schema::connection($this->databaseName)->hasColumn($table, $field);
+    }
+
     /**
      * Get the Data
      * @param  string $table
@@ -112,16 +117,25 @@ class Iseed
     public function getData($table, $max)
     {
 
-if(Schema::hasColumn('users', 'email'))
-{
-    //do something if email column exists inside users table
-}
-
+        // if(Schema::hasColumn('users', 'email'))
+        // {
+        //     //do something if email column exists inside users table
+        // }
+        if ($this->hasColumn('id')) {
+            $order='id';
+        } else if  ($this->hasColumn($table.'_id')) {
+            $order=$table.'_id';
+        } else if  ($this->hasColumn('created_at')) {
+            $order='created_at';
+        } else {
+            $order=Schema::getColumnListing($table)[0];
+        }
+        
         if (!$max) {
-            return \DB::connection($this->databaseName)->table($table)->orderByRaw('1')->get();
+            return \DB::connection($this->databaseName)->table($table)->order($order,'ask')->get();
         }
 
-        return \DB::connection($this->databaseName)->table($table)->limit($max)->orderByRaw('1')->get();
+        return \DB::connection($this->databaseName)->table($table)->limit($max)->order($order,'ask')->get();
     }
 
     /**
