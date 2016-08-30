@@ -104,12 +104,7 @@ class Iseed
         return base_path().config('iseed::config.path');
     }
 
-    public function hasColumn($table, $field)
-    {
-        return \Schema::connection($this->databaseName)->hasColumn($table, $field);
-    }
-
-    /**
+     /**
      * Get the Data
      * @param  string $table
      * @return Array
@@ -121,22 +116,25 @@ class Iseed
         // {
         //     //do something if email column exists inside users table
         // }
-        if ($this->hasColumn('id')) {
+                $columns=\Schema::connection($this->databaseName)->getColumnListing($table);
+
+        if (in_array('id',$columns)) {
             $order='id';
-        } else if  ($this->hasColumn($table.'_id')) {
+        } else if  (in_array($table.'_id',$columns)) {
             $order=$table.'_id';
-        } else if  ($this->hasColumn('created_at')) {
+        } else if  (in_array('created_at',$columns)) {
             $order='created_at';
         } else {
-            $order=Schema::getColumnListing($table)[0];
-        }
-        
-        if (!$max) {
-            return \DB::connection($this->databaseName)->table($table)->order($order,'ask')->get();
+            $order=$columns[0];
         }
 
-        return \DB::connection($this->databaseName)->table($table)->limit($max)->order($order,'ask')->get();
+        if (!$max) {
+            return \DB::connection($this->databaseName)->table($table)->orderBy($order,'ask')->get();
+        }
+
+        return \DB::connection($this->databaseName)->table($table)->limit($max)->orderBy($order,'ask')->get();
     }
+
 
     /**
      * Repacks data read from the database
