@@ -111,11 +111,17 @@ class Iseed
      */
     public function getData($table, $max)
     {
+
+if(Schema::hasColumn('users', 'email'))
+{
+    //do something if email column exists inside users table
+}
+
         if (!$max) {
-            return \DB::connection($this->databaseName)->table($table)->get();
+            return \DB::connection($this->databaseName)->table($table)->orderByRaw('1')->get();
         }
 
-        return \DB::connection($this->databaseName)->table($table)->limit($max)->get();
+        return \DB::connection($this->databaseName)->table($table)->limit($max)->orderByRaw('1')->get();
     }
 
     /**
