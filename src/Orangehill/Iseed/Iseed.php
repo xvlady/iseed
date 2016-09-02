@@ -129,10 +129,10 @@ class Iseed
         }
 
         if (!$max) {
-            return \DB::connection($this->databaseName)->table($table)->orderBy($order,'ask')->get();
+            return \DB::connection($this->databaseName)->table($table)->orderBy($order,'desc')->get();
         }
 
-        return \DB::connection($this->databaseName)->table($table)->limit($max)->orderBy($order,'ask')->get();
+        return \DB::connection($this->databaseName)->table($table)->limit($max)->orderBy($order,'desc')->get();
     }
 
 
